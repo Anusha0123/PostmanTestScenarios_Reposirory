@@ -1,0 +1,1190 @@
+{
+	"info": {
+		"_postman_id": "a80bedf8-3ec6-4f44-8cfd-c7cf2f6afe53",
+		"name": "01SagChip_Registration",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Player_Registration_Dynamic",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8d67da15-20ca-4969-8223-6d48cf5ce2ce",
+						"exec": [
+							" var jsonData = pm.response.json();\r",
+							" pm.test(\"The response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200 success.\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Terms and Conditions accepted.\", function () {\r",
+							"    pm.expect(jsonData.profileDTO.acceptTermsAndConditions).to.eql(true);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifying the registration Level-2\", function () {\r",
+							"    pm.expect(jsonData.profileDTO.registrationLevel).to.eql(2);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifying the player is not self-exclued\", function () {\r",
+							"    pm.expect(jsonData.profileDTO.selfExcluded).to.eql(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifying the player age\", function () {\r",
+							"    pm.expect(jsonData.profileDTO.ageConfirmation).to.eql(true);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifying that the player recieves the alerts\", function () {\r",
+							"    pm.expect(jsonData.profileDTO.receiveAlerts).to.eql(true);\r",
+							"});\r",
+							"\r",
+							"// Checking the player age Limit not exceeding 21 years\r",
+							"pm.test(\"Checking DOB is less than 1999-01-01\", () => {\r",
+							"\r",
+							"   let date, \r",
+							"   formatDate,\r",
+							"//converting the date to integer format by using the getTime() function.\r",
+							"   a = new Date('1999-01-01').getTime();\r",
+							"\r",
+							"   for (i = 0; i < jsonData.content; i++) \r",
+							"   {\r",
+							"      date = jsonData.content[i].birthday;\r",
+							"      // Converting to integer from date format\r",
+							"      formatDate = new Date(date).getTime(); \r",
+							"\r",
+							"      pm.expect(formatDate).to.be.below(a);\r",
+							"   }\r",
+							"});\r",
+							"\r",
+							"console.log(\"Date of Birth format is: YYYY-MM-DD\");\r",
+							"\r",
+							"pm.test(\"Response body contains the FirstName, Lastname, Gender, postlCode, City, email address as address, address1, dateOfBirth, Nickname and Username\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"firstName\", \"lastName\", \"gender\", \"postlCode\", \"city\", \"address\", \"address1\", \"dateOfBirth\", \"nickName\", \"userName\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6a38f56a-fc60-44c1-83fd-5c7f49960545",
+						"exec": [
+							"var firstName = getRandomText(10);\r",
+							"var lastName = getRandomText(6);\r",
+							"var prefix = \"Miss.\";\r",
+							"var gender = \"FEMALE\";\r",
+							"var dateOfBirth = \"655583400000\";\r",
+							"var address = \"sagchiptest\" + getRandomNumber(3) + \"@mailinator.com\";\r",
+							"var phonenumber = getRandomNumber(10);\r",
+							"var address1 = getRandomText(15);\r",
+							"var postalCode = \"89102\";\r",
+							"var city = \"Saginaw\";\r",
+							"var nickName = getRandomText(6);\r",
+							"var userName = \"sagchiptest\" + getRandomNumber(4);\r",
+							"var ssn = getRandomNumber(4);\r",
+							"\r",
+							"pm.environment.unset(\"firstName\");\r",
+							"pm.environment.set(\"firstName\",firstName);\r",
+							"pm.environment.unset(\"lastName\");\r",
+							"pm.environment.set(\"lastName\",lastName);\r",
+							"pm.environment.unset(\"prefix\");\r",
+							"pm.environment.set(\"prefix\",prefix);\r",
+							"pm.environment.unset(\"gender\");\r",
+							"pm.environment.set(\"gender\",gender);\r",
+							"pm.environment.unset(\"dateOfBirth\");\r",
+							"pm.environment.set(\"dateOfBirth\",dateOfBirth);\r",
+							"pm.environment.unset(\"address\");\r",
+							"pm.environment.set(\"address\",address);\r",
+							"pm.environment.unset(\"phonenumber\");\r",
+							"pm.environment.set(\"phonenumber\",phonenumber);\r",
+							"pm.environment.unset(\"address1\");\r",
+							"pm.environment.set(\"address1\",address1);\r",
+							"pm.environment.unset(\"postalCode\");\r",
+							"pm.environment.set(\"postalCode\",postalCode);\r",
+							"pm.environment.unset(\"city\");\r",
+							"pm.environment.set(\"city\",city);\r",
+							"pm.environment.unset(\"nickName\");\r",
+							"pm.environment.set(\"nickName\",nickName);\r",
+							"pm.environment.unset(\"userName\");\r",
+							"pm.environment.set(\"userName\",userName);\r",
+							"pm.environment.unset(\"ssn\");\r",
+							"pm.environment.set(\"ssn\",ssn);\r",
+							"\r",
+							"function getRandomText(length) {\r",
+							"  var charset = \"abcdefghijklmnopqrstuvwxyz\".match(/./g);\r",
+							"  var resultset = \"\";\r",
+							"  for (var i = 0; i < length; i++) \r",
+							"      resultset += charset[Math.floor(Math.random() * charset.length)];\r",
+							"  //console.log(resultset);\r",
+							"  return resultset;\r",
+							"}\r",
+							"\r",
+							"function getRandomNumber(length) {\r",
+							"  var charset = \"0123456789\".match(/./g);\r",
+							"  var result = \"\";\r",
+							"  for (var i = 0; i < length; i++) \r",
+							"      result += charset[Math.floor(Math.random() * charset.length)];\r",
+							"  //console.log(result);\r",
+							"  return result;\r",
+							"}\r",
+							"\r",
+							"console.log(prefix);\r",
+							"console.log(firstName);\r",
+							"console.log(lastName);\r",
+							"console.log(address);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36",
+						"type": "text"
+					},
+					{
+						"key": "X-EXECUTE-SYNC",
+						"value": "true",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"affiliateId\":null,\r\n    \"personalInfo\":\r\n    {\r\n        \"firstName\":\"{{firstName}}\",\r\n        \"lastName\":\"{{lastName}}\",\r\n        \"prefix\":\"{{prefix}}\",\r\n        \"gender\":\"{{gender}}\",\r\n        \"dateOfBirth\": \"{{dateOfBirth}}\",\r\n        \"citizenship\":\"RESIDENT\",\r\n        \"taxCategory\":\"\",\r\n        \"businessTitle\":\"\",\r\n        \"timeZone\":\"\",\r\n        \"emails\":\r\n        {\r\n            \"PERSONAL\":\r\n            {\r\n                \"type\":\"PERSONAL\",\r\n                \"address\":\"{{address}}\",\r\n                \"verified\":false\r\n                }\r\n                },\r\n                \"phones\":\r\n                {\r\n                    \"HOME\":\r\n                    {\r\n                        \"type\":\"HOME\",\r\n                        \"number\":\"{{phonenumber}}\"\r\n                        },\r\n                        \"MOBILE\":\r\n                        {\r\n                            \"type\":\"MOBILE\",\r\n                            \"number\":\"{{phonenumber}}\"\r\n                            }\r\n                            },\r\n                            \"addresses\":\r\n                            {\r\n                                \"MAILING\":{\r\n                                    \"address1\":\"{{address1}}\",\r\n                                    \"address2\":\"\",\r\n                                    \"address3\":\"\",\r\n                                    \"postalCode\":\"{{postalCode}}\",\r\n                                    \"city\":\"{{city}}\",\r\n                                    \"state\":\"MI\",\r\n                                    \"isoCountryCode\":\"US\"\r\n                                    },\r\n                                    \"BILLING\":\r\n                                    {\r\n                                        \"address1\":\"{{address1}}\",\r\n                                        \"address2\":\"\",\r\n                                        \"address3\":\"\",\r\n                                        \"postalCode\":\"{{postalCode}}\",\r\n                                        \"city\":\"{{city}}\",\r\n                                        \"state\":\"MI\",\r\n                                        \"isoCountryCode\":\"US\",\r\n                                        \"type\":\"BILLING\"\r\n                                        }},\r\n                                        \"passwordHints\":\r\n                                        [{\r\n                                            \"securityQuestion\":{\r\n                                                \"question\":\"securityQuestion.city\"\r\n                                                },\r\n                                                \"securityAnswer\":\r\n                                                {\r\n                                                    \"answer\":\"city\"\r\n                                                    }\r\n                                                    }\r\n                                                    ]\r\n                                                    },\r\n                                                    \"profileDTO\":{\r\n                                                        \"ageConfirmation\":true,\"affiliateId\":\"null\",\"trackingCampaign\":\"null\",\"receiveAlerts\":true,\"marketAnalysis\":true,\"acceptsEmail\":true,\"acceptsRewards\":true,\"language\":\"en_US\",\"preferredCurrency\":\"USD\",\r\n                                                            \"nickName\":\"{{nickName}}\",\"communicationPreferences\":null,\"preferredPaymentMode\":null,\"registrationDate\":null,\"registrationLevel\":2,\r\n                                                            \"userName\":\"{{userName}}\",\r\n                                                        \"loyaltyTier\":\"\",\"acceptedTermsAndConditionsDate\":1605712524898,\"acceptTermsAndConditions\":true,\"termsAndConditionsId\":\"1605712524898\"\r\n                                                        },\r\n                                                        \"nonpublicPersonalInfo\":{\r\n                                                            \"dateOfBirth\": \"{{dateOfBirth}}\",\"feinNumber\":\"\",\"identificationNumber\":\"{{ssn}}\",\"identificationIssuer\":\"ssn\",\"socialSecurityNumber\":\"{{ssn}}\",\"securityCode\":\"\"\r\n                                                            },\r\n                                                            \"promotions\":[{\r\n                                                                \"type\":\"INVITATION_CODE\"}],\r\n                                                                \"optIntoGeoCompliance\":false,\"password\":\"Password1\",\"playerCard\":null\r\n                                                                }"
+				},
+				"url": {
+					"raw": "https://sagsit1interactive.dev.igt.com/api/v2/players/registration",
+					"protocol": "https",
+					"host": [
+						"sagsit1interactive",
+						"dev",
+						"igt",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"players",
+						"registration"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "Anushaqatest10",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "anushasit1test10@mailinator.com",
+							"disabled": true
+						},
+						{
+							"key": "confirmemail",
+							"value": "anushasit1test10@mailinator.com",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "Password1",
+							"disabled": true
+						},
+						{
+							"key": "confirmpassword",
+							"value": "Password1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Duplicate_Username_Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fe872197-e62e-4b07-a09c-13e84f0816c9",
+						"exec": [
+							" var jsonData = pm.response.json();\r",
+							" pm.test(\"The response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 400 Bad Request.\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifying duplicate username: Username is already registered.\", function () {\r",
+							"    pm.expect(jsonData.code).to.eql(\"USERNAME_ALREADY_REGISTERED\");\r",
+							"});\r",
+							"\r",
+							"var usernameaftertest = (pm.environment.get(\"userName\"));\r",
+							"console.log(\"Duplicate Username after test:\" + usernameaftertest);\r",
+							"\r",
+							"var dupusername = (pm.environment.get(\"userName\"));\r",
+							"console.log(\"Duplicate Username before test:\" + dupusername);\r",
+							"\r",
+							"\r",
+							"// console.log(\"Duplicate Firstname:\"+ (pm.environment.get(\"dupfirstname\")));\r",
+							"// console.log(\"Duplicate Lastname:\"+ (pm.environment.get(\"duplastname\")));\r",
+							"// console.log(\"Duplicate DOB:\"+ (pm.environment.get(\"dupdob\")));\r",
+							"// console.log(\"Duplicate SSN:\"+ (pm.environment.get(\"dupssn\")));\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "85b9e745-7a7d-4b97-8d48-e9bdc71e21f0",
+						"exec": [
+							"var newfirstname = getRandomText(10);\r",
+							"var newlastname = getRandomText(6);\r",
+							"var newprefix = \"Miss.\";\r",
+							"var newgender = \"FEMALE\";\r",
+							"var newdateOfBirth = \"655583400000\";\r",
+							"var newaddress = \"misagchipsit1test\" + getRandomNumber(3) + \"@mailinator.com\";\r",
+							"var newphonenumber = getRandomNumber(10);\r",
+							"var newaddress1 = getRandomText(15);\r",
+							"var newpostalcode = \"89102\";\r",
+							"var newcity = \"Saginaw\";\r",
+							"var newnickname = getRandomText(8);\r",
+							"//var userName = \"misagchipsit1test\" + getRandomNumber(2);\r",
+							"var dupusername = (pm.environment.get(\"userName\"));\r",
+							"console.log(\"Duplicate Username before test:\" + dupusername);\r",
+							"pm.environment.set(\"dupusername\",dupusername);\r",
+							"\r",
+							"var newssn = getRandomNumber(4);\r",
+							"\r",
+							"pm.environment.unset(\"newfirstname\");\r",
+							"pm.environment.set(\"newfirstname\",newfirstname);\r",
+							"pm.environment.unset(\"newlastname\");\r",
+							"pm.environment.set(\"newlastname\",newlastname);\r",
+							"pm.environment.unset(\"newprefix\");\r",
+							"pm.environment.set(\"newprefix\",newprefix);\r",
+							"pm.environment.unset(\"newgender\");\r",
+							"pm.environment.set(\"newgender\",newgender);\r",
+							"pm.environment.unset(\"newdateOfBirth\");\r",
+							"pm.environment.set(\"newdateOfBirth\",newdateOfBirth);\r",
+							"pm.environment.unset(\"newaddress\");\r",
+							"pm.environment.set(\"newaddress\",newaddress);\r",
+							"pm.environment.unset(\"newphonenumber\");\r",
+							"pm.environment.set(\"newphonenumber\",newphonenumber);\r",
+							"pm.environment.unset(\"newaddress1\");\r",
+							"pm.environment.set(\"newaddress1\",newaddress1);\r",
+							"pm.environment.unset(\"newpostalcode\");\r",
+							"pm.environment.set(\"newpostalcode\",newpostalcode);\r",
+							"pm.environment.unset(\"newcity\");\r",
+							"pm.environment.set(\"newcity\",newcity);\r",
+							"pm.environment.unset(\"newnickname\");\r",
+							"pm.environment.set(\"newnickname\",newnickname);\r",
+							"//pm.environment.unset(\"userName\");\r",
+							"//pm.environment.set(\"userName\",userName);\r",
+							"// pm.environment.get(\"userName\");\r",
+							"// console.log(userName);\r",
+							"\r",
+							"pm.environment.unset(\"newssn\");\r",
+							"pm.environment.set(\"newssn\",newssn);\r",
+							"\r",
+							"console.log(newprefix);\r",
+							"console.log(newfirstname);\r",
+							"console.log(newlastname);\r",
+							"console.log(newaddress);\r",
+							"\r",
+							"function getRandomText(length) {\r",
+							"  var charset = \"abcdefghijklmnopqrstuvwxyz\".match(/./g);\r",
+							"  var resultset = \"\";\r",
+							"  for (var i = 0; i < length; i++) \r",
+							"      resultset += charset[Math.floor(Math.random() * charset.length)];\r",
+							"  //console.log(resultset);\r",
+							"  return resultset;\r",
+							"}\r",
+							"\r",
+							"function getRandomNumber(length) {\r",
+							"  var charset = \"0123456789\".match(/./g);\r",
+							"  var result = \"\";\r",
+							"  for (var i = 0; i < length; i++) \r",
+							"      result += charset[Math.floor(Math.random() * charset.length)];\r",
+							"  //console.log(result);\r",
+							"  return result;\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "User-Agent",
+						"type": "text",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
+					},
+					{
+						"key": "X-EXECUTE-SYNC",
+						"type": "text",
+						"value": "true"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"affiliateId\":null,\r\n    \"personalInfo\":\r\n    {\r\n        \"firstName\":\"{{newfirstname}}\",\r\n        \"lastName\":\"{{newlastname}}\",\r\n        \"prefix\":\"{{newprefix}}\",\r\n        \"gender\":\"{{newgender}}\",\r\n        \"dateOfBirth\": \"{{newdateOfBirth}}\",\r\n        \"citizenship\":\"RESIDENT\",\r\n        \"taxCategory\":\"\",\r\n        \"businessTitle\":\"\",\r\n        \"timeZone\":\"\",\r\n        \"emails\":\r\n        {\r\n            \"PERSONAL\":\r\n            {\r\n                \"type\":\"PERSONAL\",\r\n                \"address\":\"{{newaddress}}\",\r\n                \"verified\":false\r\n                }\r\n                },\r\n                \"phones\":\r\n                {\r\n                    \"HOME\":\r\n                    {\r\n                        \"type\":\"HOME\",\r\n                        \"number\":\"{{newphonenumber}}\"\r\n                        },\r\n                        \"MOBILE\":\r\n                        {\r\n                            \"type\":\"MOBILE\",\r\n                            \"number\":\"{{newphonenumber}}\"\r\n                            }\r\n                            },\r\n                            \"addresses\":\r\n                            {\r\n                                \"MAILING\":{\r\n                                    \"address1\":\"{{newaddress1}}\",\r\n                                    \"address2\":\"\",\r\n                                    \"address3\":\"\",\r\n                                    \"postalCode\":\"{{newpostalcode}}\",\r\n                                    \"city\":\"{{newcity}}\",\r\n                                    \"state\":\"MI\",\r\n                                    \"isoCountryCode\":\"US\"\r\n                                    },\r\n                                    \"BILLING\":\r\n                                    {\r\n                                        \"address1\":\"{{newaddress1}}\",\r\n                                        \"address2\":\"\",\r\n                                        \"address3\":\"\",\r\n                                        \"postalCode\":\"{{newpostalcode}}\",\r\n                                        \"city\":\"{{newcity}}\",\r\n                                        \"state\":\"MI\",\r\n                                        \"isoCountryCode\":\"US\",\r\n                                        \"type\":\"BILLING\"\r\n                                        }},\r\n                                        \"passwordHints\":\r\n                                        [{\r\n                                            \"securityQuestion\":{\r\n                                                \"question\":\"securityQuestion.city\"\r\n                                                },\r\n                                                \"securityAnswer\":\r\n                                                {\r\n                                                    \"answer\":\"city\"\r\n                                                    }\r\n                                                    }\r\n                                                    ]\r\n                                                    },\r\n                                                    \"profileDTO\":{\r\n                                                        \"ageConfirmation\":true,\"affiliateId\":\"null\",\"trackingCampaign\":\"null\",\"receiveAlerts\":true,\"marketAnalysis\":true,\"acceptsEmail\":true,\"acceptsRewards\":true,\"language\":\"en_US\",\"preferredCurrency\":\"USD\",\r\n                                                            \"nickName\":\"{{newnickname}}\",\"communicationPreferences\":null,\"preferredPaymentMode\":null,\"registrationDate\":null,\"registrationLevel\":2,\r\n                                                            \"userName\":\"{{dupusername}}\",\r\n                                                        \"loyaltyTier\":\"\",\"acceptedTermsAndConditionsDate\":1605712524898,\"acceptTermsAndConditions\":true,\"termsAndConditionsId\":\"1605712524898\"\r\n                                                        },\r\n                                                        \"nonpublicPersonalInfo\":{\r\n                                                            \"dateOfBirth\": \"{{newdateOfBirth}}\",\"feinNumber\":\"\",\"identificationNumber\":\"{{newssn}}\",\"identificationIssuer\":\"ssn\",\"socialSecurityNumber\":\"{{newssn}}\",\"securityCode\":\"\"\r\n                                                            },\r\n                                                            \"promotions\":[{\r\n                                                                \"type\":\"INVITATION_CODE\"}],\r\n                                                                \"optIntoGeoCompliance\":false,\"password\":\"Password1\",\"playerCard\":null\r\n                                                                }"
+				},
+				"url": {
+					"raw": "https://sagsit1interactive.dev.igt.com/api/v2/players/registration",
+					"protocol": "https",
+					"host": [
+						"sagsit1interactive",
+						"dev",
+						"igt",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"players",
+						"registration"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "Anushaqatest10",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "anushasit1test10@mailinator.com",
+							"disabled": true
+						},
+						{
+							"key": "confirmemail",
+							"value": "anushasit1test10@mailinator.com",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "Password1",
+							"disabled": true
+						},
+						{
+							"key": "confirmpassword",
+							"value": "Password1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Duplicate_SSN_Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e3d52ad-41e0-45ac-8d7f-2460c6e09437",
+						"exec": [
+							" var jsonData = pm.response.json();\r",
+							" pm.test(\"The response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 400 Bad Request.\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifying player duplicate SSN: SSN is already registered.\", function () {\r",
+							"    pm.expect(jsonData.code).to.eql(\"SSN_ALREADY_REGISTERED\");\r",
+							"});\r",
+							"\r",
+							"var firstnameaftertest = (pm.environment.get(\"firstName\"));\r",
+							"console.log(\"Duplicate firstName after test:\" + firstnameaftertest);\r",
+							"\r",
+							"var dupfirstname = (pm.environment.get(\"firstName\"));\r",
+							"console.log(\"Duplicate firstName before test:\" + dupfirstname);\r",
+							"\r",
+							"var lastnameaftertest = (pm.environment.get(\"lastName\"));\r",
+							"console.log(\"Duplicate lastName after test:\" + lastnameaftertest);\r",
+							"\r",
+							"var duplastname = (pm.environment.get(\"lastName\"));\r",
+							"console.log(\"Duplicate lastName before test:\" + duplastname);\r",
+							"\r",
+							"var dobaftertest = (pm.environment.get(\"dateOfBirth\"));\r",
+							"console.log(\"Duplicate dateOfBirth after test:\" + dobaftertest);\r",
+							"\r",
+							"var dupdob = (pm.environment.get(\"dateOfBirth\"));\r",
+							"console.log(\"Duplicate dateOfBirth before test:\" + dupdob);\r",
+							"\r",
+							"var ssnaftertest = (pm.environment.get(\"ssn\"));\r",
+							"console.log(\"Duplicate SSN after test:\" + ssnaftertest);\r",
+							"\r",
+							"var dupssn = (pm.environment.get(\"ssn\"));\r",
+							"console.log(\"Duplicate SSN before test:\" + dupssn);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "be746a03-d390-466c-9216-091c999611f7",
+						"exec": [
+							"var dupfirstname = (pm.environment.get(\"firstName\"));\r",
+							"console.log(\"Duplicate firstName before test:\" + dupfirstname);\r",
+							"pm.environment.unset(\"dupfirstname\");\r",
+							"pm.environment.set(\"dupfirstname\",dupfirstname);\r",
+							"//var firstName = getRandomText(10);\r",
+							"//var lastName = getRandomText(6);\r",
+							"var duplastname = (pm.environment.get(\"lastName\"));\r",
+							"console.log(\"Duplicate lastName before test:\" + duplastname);\r",
+							"pm.environment.unset(\"duplastname\");\r",
+							"pm.environment.set(\"duplastname\",duplastname);\r",
+							"\r",
+							"var dupdob = (pm.environment.get(\"dateOfBirth\"));\r",
+							"console.log(\"Duplicate DOB before test:\" + dupdob);\r",
+							"pm.environment.unset(\"dupdob\");\r",
+							"pm.environment.set(\"dupdob\",dupdob);\r",
+							"\r",
+							"var prefix3 = \"Miss.\";\r",
+							"var gender3 = \"FEMALE\";\r",
+							"//var dateOfBirth = \"10111990\"; 655583400000\r",
+							"\r",
+							"var address3 = \"misagchipsit1test\" + getRandomNumber(3) + \"@mailinator.com\";\r",
+							"var phonenumber3 = getRandomNumber(10);\r",
+							"var ssnaddress1 = getRandomText(15);\r",
+							"var postalCode3 = \"89102\";\r",
+							"var city3 = \"Saginaw\";\r",
+							"var nickName3 = getRandomText(6);\r",
+							"pm.environment.unset(\"userName3\");\r",
+							"var userName3 = \"misagchipsit1test\" + getRandomNumber(3);\r",
+							"//var ssn = getRandomNumber(4);\r",
+							"\r",
+							"var dupssn = (pm.environment.get(\"ssn\"));\r",
+							"console.log(\"Duplicate SSN before test:\" + dupssn);\r",
+							"pm.environment.unset(\"dupssn\");\r",
+							"pm.environment.set(\"dupssn\",dupssn);\r",
+							"\r",
+							"pm.environment.unset(\"prefix3\");\r",
+							"pm.environment.set(\"prefix3\",prefix3);\r",
+							"pm.environment.unset(\"gender3\");\r",
+							"pm.environment.set(\"gender3\",gender3);\r",
+							"\r",
+							"pm.environment.unset(\"address3\");\r",
+							"pm.environment.set(\"address3\",address3);\r",
+							"\r",
+							"pm.environment.unset(\"phonenumber3\");\r",
+							"pm.environment.set(\"phonenumber3\",phonenumber3);\r",
+							"pm.environment.unset(\"ssnaddress1\");\r",
+							"pm.environment.set(\"ssnaddress1\",ssnaddress1);\r",
+							"pm.environment.unset(\"postalCode3\");\r",
+							"pm.environment.set(\"postalCode3\",postalCode3);\r",
+							"pm.environment.unset(\"city3\");\r",
+							"pm.environment.set(\"city3\",city3);\r",
+							"pm.environment.unset(\"nickName3\");\r",
+							"pm.environment.set(\"nickName3\",nickName3);\r",
+							"pm.environment.unset(\"userName3\");\r",
+							"pm.environment.set(\"userName3\",userName3);\r",
+							"\r",
+							"console.log(prefix3);\r",
+							"//console.log(\"Username before SSN verification:\" + userName3);\r",
+							"\r",
+							"function getRandomText(length) {\r",
+							"  var charset = \"abcdefghijklmnopqrstuvwxyz\".match(/./g);\r",
+							"  var resultset = \"\";\r",
+							"  for (var i = 0; i < length; i++) \r",
+							"      resultset += charset[Math.floor(Math.random() * charset.length)];\r",
+							"  //console.log(resultset);\r",
+							"  return resultset;\r",
+							"}\r",
+							"\r",
+							"function getRandomNumber(length) {\r",
+							"  var charset = \"0123456789\".match(/./g);\r",
+							"  var result = \"\";\r",
+							"  for (var i = 0; i < length; i++) \r",
+							"      result += charset[Math.floor(Math.random() * charset.length)];\r",
+							"  //console.log(result);\r",
+							"  return result;\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "User-Agent",
+						"type": "text",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
+					},
+					{
+						"key": "X-EXECUTE-SYNC",
+						"type": "text",
+						"value": "true"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"affiliateId\":null,\r\n    \"personalInfo\":\r\n    {\r\n        \"firstName\":\"{{dupfirstname}}\",\r\n        \"lastName\":\"{{duplastname}}\",\r\n        \"prefix\":\"{{prefix3}}\",\r\n        \"gender\":\"{{gender3}}\",\r\n        \"dateOfBirth\": \"{{dupdob}}\",\r\n        \"citizenship\":\"RESIDENT\",\r\n        \"taxCategory\":\"\",\r\n        \"timeZone\":\"\",\r\n        \"emails\":\r\n        {\r\n            \"PERSONAL\":\r\n            {\r\n                \"type\":\"PERSONAL\",\r\n                \"address\":\"{{address3}}\",\r\n                \"verified\":false\r\n                }\r\n                },\r\n                \"phones\":\r\n                {\r\n                    \"HOME\":\r\n                    {\r\n                        \"type\":\"HOME\",\r\n                        \"number\":\"{{phonenumber3}}\"\r\n                        },\r\n                        \"MOBILE\":\r\n                        {\r\n                            \"type\":\"MOBILE\",\r\n                            \"number\":\"{{phonenumber3}}\"\r\n                            }\r\n                            },\r\n                            \"addresses\":\r\n                            {\r\n                                \"MAILING\":{\r\n                                    \"address1\":\"{{ssnaddress1}}\",\r\n                                    \"address2\":\"\",\r\n                                    \"address3\":\"\",\r\n                                    \"postalCode\":\"{{postalCode3}}\",\r\n                                    \"city\":\"{{city3}}\",\r\n                                    \"state\":\"MI\",\r\n                                    \"isoCountryCode\":\"US\"\r\n                                    },\r\n                                    \"BILLING\":\r\n                                    {\r\n                                        \"address1\":\"{{ssnaddress1}}\",\r\n                                        \"address2\":\"\",\r\n                                        \"address3\":\"\",\r\n                                        \"postalCode\":\"{{postalCode3}}\",\r\n                                        \"city\":\"{{city3}}\",\r\n                                        \"state\":\"MI\",\r\n                                        \"isoCountryCode\":\"US\",\r\n                                        \"type\":\"BILLING\"\r\n                                        }},\r\n                                        \"passwordHints\":\r\n                                        [{\r\n                                            \"securityQuestion\":{\r\n                                                \"question\":\"securityQuestion.city\"\r\n                                                },\r\n                                                \"securityAnswer\":\r\n                                                {\r\n                                                    \"answer\":\"city\"\r\n                                                    }\r\n                                                    }\r\n                                                    ]\r\n                                                    },\r\n                                                    \"profileDTO\":{\r\n                                                        \"ageConfirmation\":true,\"affiliateId\":\"null\",\"trackingCampaign\":\"null\",\"receiveAlerts\":true,\"marketAnalysis\":true,\"acceptsEmail\":true,\"acceptsRewards\":true,\"language\":\"en_US\",\"preferredCurrency\":\"USD\",\r\n                                                            \"nickName\":\"{{nickName3}}\",\"communicationPreferences\":null,\"preferredPaymentMode\":null,\"registrationDate\":null,\"registrationLevel\":2,\r\n                                                            \"userName\":\"{{userName3}}\",\r\n                                                        \"loyaltyTier\":\"\",\"acceptedTermsAndConditionsDate\":1605712524898,\"acceptTermsAndConditions\":true,\"termsAndConditionsId\":\"1605712524898\"\r\n                                                        },\r\n                                                        \"nonpublicPersonalInfo\":{\r\n                                                            \"dateOfBirth\": \"{{dupdob}}\",\"feinNumber\":\"\",\"identificationNumber\":\"{{dupssn}}\",\"identificationIssuer\":\"ssn\",\"socialSecurityNumber\":\"{{dupssn}}\",\"securityCode\":\"\"\r\n                                                            },\r\n                                                            \"promotions\":[{\r\n                                                                \"type\":\"INVITATION_CODE\"}],\r\n                                                                \"optIntoGeoCompliance\":false,\"password\":\"Password1\",\"playerCard\":null\r\n                                                                }"
+				},
+				"url": {
+					"raw": "https://sagsit1interactive.dev.igt.com/api/v2/players/registration",
+					"protocol": "https",
+					"host": [
+						"sagsit1interactive",
+						"dev",
+						"igt",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"players",
+						"registration"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "Anushaqatest10",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "anushasit1test10@mailinator.com",
+							"disabled": true
+						},
+						{
+							"key": "confirmemail",
+							"value": "anushasit1test10@mailinator.com",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "Password1",
+							"disabled": true
+						},
+						{
+							"key": "confirmpassword",
+							"value": "Password1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Duplicate_Email_Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "63b46fa6-f842-400d-907c-ca17a38c1e2f",
+						"exec": [
+							" var jsonData = pm.response.json();\r",
+							" pm.test(\"The response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 400 Bad Request.\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifying player duplicate email: Email is already registered.\", function () {\r",
+							"    pm.expect(jsonData.code).to.eql(\"EMAIL_ALREADY_REGISTERED\");\r",
+							"});\r",
+							"\r",
+							"var eamilaftertest = (pm.environment.get(\"address\"));\r",
+							"console.log(\"Duplicate email address after test:\" + eamilaftertest);\r",
+							"\r",
+							"var dupemail = (pm.environment.get(\"address\"));\r",
+							"console.log(\"Duplicate email address before test:\" + dupemail);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "efb4e8a3-7b6f-40e8-b6be-05813207f171",
+						"exec": [
+							"var newfirstName1 = getRandomText(10);\r",
+							"var newlastName1 = getRandomText(6);\r",
+							"var newprefix1 = \"Miss.\";\r",
+							"var newgender1 = \"FEMALE\";\r",
+							"var newdateOfBirth1 = \"655583400000\";\r",
+							"//var address = \"misagchipsit1test\" + getRandomNumber(3) + \"@mailinator.com\";\r",
+							"var newphonenumber1 = getRandomNumber(10);\r",
+							"var newaaddress1 = getRandomText(15);\r",
+							"var newpostalCode1 = \"89102\";\r",
+							"var newcity1 = \"Saginaw\";\r",
+							"var newnickName1 = getRandomText(6);\r",
+							"var newuserName1 = \"misagchipsit1test\" + getRandomNumber(2);\r",
+							"var newssn1 = getRandomNumber(4);\r",
+							"\r",
+							"pm.environment.unset(\"newfirstName1\");\r",
+							"pm.environment.set(\"newfirstName1\",newfirstName1);\r",
+							"pm.environment.unset(\"newlastName1\");\r",
+							"pm.environment.set(\"newlastName1\",newlastName1);\r",
+							"pm.environment.unset(\"newprefix1\");\r",
+							"pm.environment.set(\"newprefix1\",newprefix1);\r",
+							"pm.environment.unset(\"newgender1\");\r",
+							"pm.environment.set(\"newgender1\",newgender1);\r",
+							"pm.environment.unset(\"newdateOfBirth1\");\r",
+							"pm.environment.set(\"newdateOfBirth1\",newdateOfBirth1);\r",
+							"// pm.environment.unset(\"address\");\r",
+							"// pm.environment.set(\"address\",address);\r",
+							"var dupemail = (pm.environment.get(\"address\"));\r",
+							"console.log(\"Duplicate email address before test:\" + dupemail);\r",
+							"pm.environment.set(\"dupemail\",dupemail);\r",
+							"\r",
+							"var ssn = getRandomNumber(4);\r",
+							"\r",
+							"pm.environment.unset(\"newphonenumber1\");\r",
+							"pm.environment.set(\"newphonenumber1\",newphonenumber1);\r",
+							"pm.environment.unset(\"newaaddress1\");\r",
+							"pm.environment.set(\"newaaddress1\",newaaddress1);\r",
+							"pm.environment.unset(\"newpostalCode1\");\r",
+							"pm.environment.set(\"newpostalCode1\",newpostalCode1);\r",
+							"pm.environment.unset(\"newcity1\");\r",
+							"pm.environment.set(\"newcity1\",newcity1);\r",
+							"pm.environment.unset(\"newnickName1\");\r",
+							"pm.environment.set(\"newnickName1\",newnickName1);\r",
+							"pm.environment.unset(\"newuserName1\");\r",
+							"pm.environment.set(\"newuserName1\",newuserName1);\r",
+							"pm.environment.unset(\"newssn1\");\r",
+							"pm.environment.set(\"newssn1\",newssn1);\r",
+							"\r",
+							"console.log(newprefix1);\r",
+							"console.log(newfirstName1);\r",
+							"console.log(newlastName1);\r",
+							"//console.log(address);\r",
+							"\r",
+							"function getRandomText(length) {\r",
+							"  var charset = \"abcdefghijklmnopqrstuvwxyz\".match(/./g);\r",
+							"  var resultset = \"\";\r",
+							"  for (var i = 0; i < length; i++) \r",
+							"      resultset += charset[Math.floor(Math.random() * charset.length)];\r",
+							"  //console.log(resultset);\r",
+							"  return resultset;\r",
+							"}\r",
+							"\r",
+							"function getRandomNumber(length) {\r",
+							"  var charset = \"0123456789\".match(/./g);\r",
+							"  var result = \"\";\r",
+							"  for (var i = 0; i < length; i++) \r",
+							"      result += charset[Math.floor(Math.random() * charset.length)];\r",
+							"  //console.log(result);\r",
+							"  return result;\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "User-Agent",
+						"type": "text",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
+					},
+					{
+						"key": "X-EXECUTE-SYNC",
+						"type": "text",
+						"value": "true"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"affiliateId\":null,\r\n    \"personalInfo\":\r\n    {\r\n        \"firstName\":\"{{newfirstName1}}\",\r\n        \"lastName\":\"{{newlastName1}}\",\r\n        \"prefix\":\"{{newprefix1}}\",\r\n        \"gender\":\"{{newgender1}}\",\r\n        \"dateOfBirth\": \"{{newdateOfBirth1}}\",\r\n        \"citizenship\":\"RESIDENT\",\r\n        \"taxCategory\":\"\",\r\n        \"timeZone\":\"\",\r\n        \"emails\":\r\n        {\r\n            \"PERSONAL\":\r\n            {\r\n                \"type\":\"PERSONAL\",\r\n                \"address\":\"{{dupemail}}\",\r\n                \"verified\":false\r\n                }\r\n                },\r\n                \"phones\":\r\n                {\r\n                    \"HOME\":\r\n                    {\r\n                        \"type\":\"HOME\",\r\n                        \"number\":\"{{newphonenumber1}}\"\r\n                        },\r\n                        \"MOBILE\":\r\n                        {\r\n                            \"type\":\"MOBILE\",\r\n                            \"number\":\"{{newphonenumber1}}\"\r\n                            }\r\n                            },\r\n                            \"addresses\":\r\n                            {\r\n                                \"MAILING\":{\r\n                                    \"address1\":\"{{newaaddress1}}\",\r\n                                    \"address2\":\"\",\r\n                                    \"address3\":\"\",\r\n                                    \"postalCode\":\"{{newpostalCode1}}\",\r\n                                    \"city\":\"{{city}}\",\r\n                                    \"state\":\"MI\",\r\n                                    \"isoCountryCode\":\"US\"\r\n                                    },\r\n                                    \"BILLING\":\r\n                                    {\r\n                                        \"address1\":\"{{newaaddress1}}\",\r\n                                        \"address2\":\"\",\r\n                                        \"address3\":\"\",\r\n                                        \"postalCode\":\"{{newpostalCode1}}\",\r\n                                        \"city\":\"{{newcity1}}\",\r\n                                        \"state\":\"MI\",\r\n                                        \"isoCountryCode\":\"US\",\r\n                                        \"type\":\"BILLING\"\r\n                                        }},\r\n                                        \"passwordHints\":\r\n                                        [{\r\n                                            \"securityQuestion\":{\r\n                                                \"question\":\"securityQuestion.city\"\r\n                                                },\r\n                                                \"securityAnswer\":\r\n                                                {\r\n                                                    \"answer\":\"city\"\r\n                                                    }\r\n                                                    }\r\n                                                    ]\r\n                                                    },\r\n                                                    \"profileDTO\":{\r\n                                                        \"ageConfirmation\":true,\"affiliateId\":\"null\",\"trackingCampaign\":\"null\",\"receiveAlerts\":true,\"marketAnalysis\":true,\"acceptsEmail\":true,\"acceptsRewards\":true,\"language\":\"en_US\",\"preferredCurrency\":\"USD\",\r\n                                                            \"nickName\":\"{{newnickName1}}\",\"communicationPreferences\":null,\"preferredPaymentMode\":null,\"registrationDate\":null,\"registrationLevel\":2,\r\n                                                            \"userName\":\"{{newuserName1}}\",\r\n                                                        \"loyaltyTier\":\"\",\"acceptedTermsAndConditionsDate\":1605712524898,\"acceptTermsAndConditions\":true,\"termsAndConditionsId\":\"1605712524898\"\r\n                                                        },\r\n                                                        \"nonpublicPersonalInfo\":{\r\n                                                            \"dateOfBirth\": \"06061990\",\"feinNumber\":\"\",\"identificationNumber\":\"{{newssn1}}\",\"identificationIssuer\":\"ssn\",\"socialSecurityNumber\":\"{{newssn1}}\",\"securityCode\":\"\"\r\n                                                            },\r\n                                                            \"promotions\":[{\r\n                                                                \"type\":\"INVITATION_CODE\"}],\r\n                                                                \"optIntoGeoCompliance\":false,\"password\":\"Password1\",\"playerCard\":null\r\n                                                                }"
+				},
+				"url": {
+					"raw": "https://sagsit1interactive.dev.igt.com/api/v2/players/registration",
+					"protocol": "https",
+					"host": [
+						"sagsit1interactive",
+						"dev",
+						"igt",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"players",
+						"registration"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "Anushaqatest10",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "anushasit1test10@mailinator.com",
+							"disabled": true
+						},
+						{
+							"key": "confirmemail",
+							"value": "anushasit1test10@mailinator.com",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "Password1",
+							"disabled": true
+						},
+						{
+							"key": "confirmpassword",
+							"value": "Password1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Duplicate_Phonenumber_Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ae54fd2d-3f5e-4d36-8508-1f427d82de94",
+						"exec": [
+							" var jsonData = pm.response.json();\r",
+							" pm.test(\"The response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 400 Bad Request.\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifying player duplicate email: Phone number already registered.\", function () {\r",
+							"    pm.expect(jsonData.code).to.eql(\"MOBILE_PHONE_ALREADY_REGISTERED\");\r",
+							"});\r",
+							"\r",
+							"var phonenumberaftertest = (pm.environment.get(\"address\"));\r",
+							"console.log(\"Duplicate email address after test:\" + phonenumberaftertest);\r",
+							"\r",
+							"var dupphonenumber = (pm.environment.get(\"phonenumber\"));\r",
+							"console.log(\"Duplicate phone number before test:\" + dupphonenumber);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3681b10d-f2b8-4958-bdb1-478cfe240d58",
+						"exec": [
+							"var newfirstName2 = getRandomText(10);\r",
+							"var newlastName2 = getRandomText(6);\r",
+							"var newprefix2 = \"Miss.\";\r",
+							"var newgender2 = \"FEMALE\";\r",
+							"var newdateOfBirth2 = \"655583400000\";\r",
+							"var newaddress2 = \"misagchipsit1test\" + getRandomNumber(3) + \"@mailinator.com\";\r",
+							"//var phonenumber = getRandomNumber(10);\r",
+							"var dupphonenumber = (pm.environment.get(\"phonenumber\"));\r",
+							"console.log(\"Duplicate phone number before test:\" + dupphonenumber);\r",
+							"pm.environment.set(\"dupphonenumber\",dupphonenumber);\r",
+							"\r",
+							"var newpaddress1 = getRandomText(15);\r",
+							"var newpostalCode2 = \"89102\";\r",
+							"var newcity2 = \"Saginaw\";\r",
+							"var newnickName2 = getRandomText(6);\r",
+							"var newuserName2 = \"misagchipsit1test\" + getRandomNumber(3);\r",
+							"var newssn2 = getRandomNumber(4);\r",
+							"\r",
+							"pm.environment.unset(\"newfirstName2\");\r",
+							"pm.environment.set(\"newfirstName2\", newfirstName2);\r",
+							"pm.environment.unset(\"newlastName2\");\r",
+							"pm.environment.set(\"newlastName2\", newlastName2);\r",
+							"pm.environment.unset(\"newprefix2\");\r",
+							"pm.environment.set(\"newprefix2\", newprefix2);\r",
+							"pm.environment.unset(\"newgender2\");\r",
+							"pm.environment.set(\"newgender2\", newgender2);\r",
+							"pm.environment.unset(\"newdateOfBirth2\");\r",
+							"pm.environment.set(\"newdateOfBirth2\", newdateOfBirth2);\r",
+							"pm.environment.unset(\"newaddress2\");\r",
+							"pm.environment.set(\"newaddress2\",newaddress2);\r",
+							"pm.environment.unset(\"newpaddress1\");\r",
+							"pm.environment.set(\"newpaddress1\", newpaddress1);\r",
+							"pm.environment.unset(\"newpostalCode2\");\r",
+							"pm.environment.set(\"newpostalCode2\", newpostalCode2);\r",
+							"pm.environment.unset(\"newcity2\");\r",
+							"pm.environment.set(\"newcity2\", newcity2);\r",
+							"pm.environment.unset(\"newnickName2\");\r",
+							"pm.environment.set(\"newnickName2\", newnickName2);\r",
+							"pm.environment.unset(\"newuserName2\");\r",
+							"pm.environment.set(\"newuserName2\", newuserName2);\r",
+							"pm.environment.unset(\"newssn2\");\r",
+							"pm.environment.set(\"newssn2\", newssn2);\r",
+							"\r",
+							"console.log(newprefix2);\r",
+							"console.log(newfirstName2);\r",
+							"console.log(newlastName2);\r",
+							"\r",
+							"function getRandomText(length) {\r",
+							"    var charset = \"abcdefghijklmnopqrstuvwxyz\".match(/./g);\r",
+							"    var resultset = \"\";\r",
+							"    for (var i = 0; i < length; i++)\r",
+							"        resultset += charset[Math.floor(Math.random() * charset.length)];\r",
+							"    //console.log(resultset);\r",
+							"    return resultset;\r",
+							"}\r",
+							"\r",
+							"function getRandomNumber(length) {\r",
+							"    var charset = \"0123456789\".match(/./g);\r",
+							"    var result = \"\";\r",
+							"    for (var i = 0; i < length; i++)\r",
+							"        result += charset[Math.floor(Math.random() * charset.length)];\r",
+							"    //console.log(result);\r",
+							"    return result;\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "User-Agent",
+						"type": "text",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
+					},
+					{
+						"key": "X-EXECUTE-SYNC",
+						"type": "text",
+						"value": "true"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"affiliateId\":null,\r\n    \"personalInfo\":\r\n    {\r\n        \"firstName\":\"{{newfirstName2}}\",\r\n        \"lastName\":\"{{newlastName2}}\",\r\n        \"prefix\":\"{{newprefix2}}\",\r\n        \"gender\":\"{{newgender2}}\",\r\n        \"dateOfBirth\": \"{{newdateOfBirth2}}\",\r\n        \"citizenship\":\"RESIDENT\",\r\n        \"taxCategory\":\"\",\r\n        \"timeZone\":\"\",\r\n        \"emails\":\r\n        {\r\n            \"PERSONAL\":\r\n            {\r\n                \"type\":\"PERSONAL\",\r\n                \"address\":\"{{newaddress2}}\",\r\n                \"verified\":false\r\n                }\r\n                },\r\n                \"phones\":\r\n                {\r\n                    \"HOME\":\r\n                    {\r\n                        \"type\":\"HOME\",\r\n                        \"number\":\"{{dupphonenumber}}\"\r\n                        },\r\n                        \"MOBILE\":\r\n                        {\r\n                            \"type\":\"MOBILE\",\r\n                            \"number\":\"{{dupphonenumber}}\"\r\n                            }\r\n                            },\r\n                            \"addresses\":\r\n                            {\r\n                                \"MAILING\":{\r\n                                    \"address1\":\"{{newpaddress1}}\",\r\n                                    \"address2\":\"\",\r\n                                    \"address3\":\"\",\r\n                                    \"postalCode\":\"{{newpostalCode2}}\",\r\n                                    \"city\":\"{{newcity2}}\",\r\n                                    \"state\":\"MI\",\r\n                                    \"isoCountryCode\":\"US\"\r\n                                    },\r\n                                    \"BILLING\":\r\n                                    {\r\n                                        \"address1\":\"{{newpaddress1}}\",\r\n                                        \"address2\":\"\",\r\n                                        \"address3\":\"\",\r\n                                        \"postalCode\":\"{{newpostalCode2}}\",\r\n                                        \"city\":\"{{newcity2}}\",\r\n                                        \"state\":\"MI\",\r\n                                        \"isoCountryCode\":\"US\",\r\n                                        \"type\":\"BILLING\"\r\n                                        }},\r\n                                        \"passwordHints\":\r\n                                        [{\r\n                                            \"securityQuestion\":{\r\n                                                \"question\":\"securityQuestion.city\"\r\n                                                },\r\n                                                \"securityAnswer\":\r\n                                                {\r\n                                                    \"answer\":\"city\"\r\n                                                    }\r\n                                                    }\r\n                                                    ]\r\n                                                    },\r\n                                                    \"profileDTO\":{\r\n                                                        \"ageConfirmation\":true,\"affiliateId\":\"null\",\"trackingCampaign\":\"null\",\"receiveAlerts\":true,\"marketAnalysis\":true,\"acceptsEmail\":true,\"acceptsRewards\":true,\"language\":\"en_US\",\"preferredCurrency\":\"USD\",\r\n                                                            \"nickName\":\"{{newnickName2}}\",\"communicationPreferences\":null,\"preferredPaymentMode\":null,\"registrationDate\":null,\"registrationLevel\":2,\r\n                                                            \"userName\":\"{{newuserName2}}\",\r\n                                                        \"loyaltyTier\":\"\",\"acceptedTermsAndConditionsDate\":1605712524898,\"acceptTermsAndConditions\":true,\"termsAndConditionsId\":\"1605712524898\"\r\n                                                        },\r\n                                                        \"nonpublicPersonalInfo\":{\r\n                                                            \"dateOfBirth\": \"06061990\",\"feinNumber\":\"\",\"identificationNumber\":\"{{newssn2}}\",\"identificationIssuer\":\"ssn\",\"socialSecurityNumber\":\"{{newssn2}}\",\"securityCode\":\"\"\r\n                                                            },\r\n                                                            \"promotions\":[{\r\n                                                                \"type\":\"INVITATION_CODE\"}],\r\n                                                                \"optIntoGeoCompliance\":false,\"password\":\"Password1\",\"playerCard\":null\r\n                                                                }"
+				},
+				"url": {
+					"raw": "https://sagsit1interactive.dev.igt.com/api/v2/players/registration",
+					"protocol": "https",
+					"host": [
+						"sagsit1interactive",
+						"dev",
+						"igt",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"players",
+						"registration"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "Anushaqatest10",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "anushasit1test10@mailinator.com",
+							"disabled": true
+						},
+						{
+							"key": "confirmemail",
+							"value": "anushasit1test10@mailinator.com",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "Password1",
+							"disabled": true
+						},
+						{
+							"key": "confirmpassword",
+							"value": "Password1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Player_Age_less_than_21years",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b738ada1-975b-488e-9fa2-3fc900b0bf1c",
+						"exec": [
+							" var jsonData = pm.response.json();\r",
+							" pm.test(\"The response time is less than 5000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 400 Bad Request.\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifying player age is less than 21 years, cannot perform a registration.\", function () {\r",
+							"    pm.expect(jsonData.code).to.eql(\"BAD_REQUEST\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e08fa1bd-0894-4664-8c47-ff6a339158de",
+						"exec": [
+							"var firstName = getRandomText(10);\r",
+							"var lastName = getRandomText(6);\r",
+							"var prefix = \"Miss.\";\r",
+							"var gender = \"FEMALE\";\r",
+							"//var dateOfBirth = \"06061990\";\r",
+							"pm.variables.get(\"variable_key\");\r",
+							"//var dateOfBirth = new currentDate()-1;\r",
+							"\r",
+							" var latestdob = new Date();\r",
+							" latestdob.setDate(latestdob.getDate()-2);\r",
+							"pm.environment.set(\"latestdob\",latestdob);\r",
+							"console.log(latestdob);\r",
+							"\r",
+							"// var moment = require('moment');\r",
+							"// pm.environment.set('timestamp', moment().format((\"YYYY-MM-DD-HH.mm.SS.SSSSSS\")));\r",
+							"// pm.environment.set('date', moment().format((\"YYYY-MM-DD\")));\r",
+							"// var newdob = (pm.environment.get(\"date\"))-1;\r",
+							"// console.log(newdob);\r",
+							"\r",
+							"// var newdob1 = newdob - 2;\r",
+							"// pm.environment.unset(\"newDateOfBirth\", newdob1);\r",
+							"// pm.environment.set(\"newDateOfBirth\", newdob1);\r",
+							"// console.log(newdob1);\r",
+							"\r",
+							"// var date = new Date();\r",
+							"// var time_milliseconds = date.getTime();\r",
+							"// pm.environment.set(\"time_milliseconds\",time_milliseconds);\r",
+							"\r",
+							"\r",
+							"var address = \"misagchipsit1test\" + getRandomNumber(3) + \"@mailinator.com\";\r",
+							"var phonenumber = getRandomNumber(10);\r",
+							"var address1 = getRandomText(15);\r",
+							"var postalCode = \"89102\";\r",
+							"var city = \"Saginaw\";\r",
+							"var nickName = getRandomText(6);\r",
+							"var userName = \"misagchipsit1test\" + getRandomNumber(2);\r",
+							"var ssn = getRandomNumber(4);\r",
+							"\r",
+							"pm.environment.unset(\"firstName\");\r",
+							"pm.environment.set(\"firstName\",firstName);\r",
+							"pm.environment.unset(\"lastName\");\r",
+							"pm.environment.set(\"lastName\",lastName);\r",
+							"pm.environment.unset(\"prefix\");\r",
+							"pm.environment.set(\"prefix\",prefix);\r",
+							"pm.environment.unset(\"gender\");\r",
+							"pm.environment.set(\"gender\",gender);\r",
+							"// pm.environment.unset(\"dateOfBirth\");\r",
+							"// pm.environment.set(\"dateOfBirth\",dateOfBirth);\r",
+							"pm.environment.unset(\"address\");\r",
+							"pm.environment.set(\"address\",address);\r",
+							"pm.environment.unset(\"phonenumber\");\r",
+							"pm.environment.set(\"phonenumber\",phonenumber);\r",
+							"pm.environment.unset(\"address1\");\r",
+							"pm.environment.set(\"address1\",address1);\r",
+							"pm.environment.unset(\"postalCode\");\r",
+							"pm.environment.set(\"postalCode\",postalCode);\r",
+							"pm.environment.unset(\"city\");\r",
+							"pm.environment.set(\"city\",city);\r",
+							"pm.environment.unset(\"nickName\");\r",
+							"pm.environment.set(\"nickName\",nickName);\r",
+							"pm.environment.unset(\"userName\");\r",
+							"pm.environment.set(\"userName\",userName);\r",
+							"pm.environment.unset(\"ssn\");\r",
+							"pm.environment.set(\"ssn\",ssn);\r",
+							"\r",
+							"function getRandomText(length) {\r",
+							"  var charset = \"abcdefghijklmnopqrstuvwxyz\".match(/./g);\r",
+							"  var resultset = \"\";\r",
+							"  for (var i = 0; i < length; i++) \r",
+							"      resultset += charset[Math.floor(Math.random() * charset.length)];\r",
+							"  //console.log(resultset);\r",
+							"  return resultset;\r",
+							"}\r",
+							"\r",
+							"function getRandomNumber(length) {\r",
+							"  var charset = \"0123456789\".match(/./g);\r",
+							"  var result = \"\";\r",
+							"  for (var i = 0; i < length; i++) \r",
+							"      result += charset[Math.floor(Math.random() * charset.length)];\r",
+							"  //console.log(result);\r",
+							"  return result;\r",
+							"}\r",
+							"\r",
+							"console.log(prefix);\r",
+							"console.log(firstName);\r",
+							"console.log(lastName);\r",
+							"console.log(address);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "User-Agent",
+						"type": "text",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
+					},
+					{
+						"key": "X-EXECUTE-SYNC",
+						"type": "text",
+						"value": "true"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"affiliateId\":null,\r\n    \"personalInfo\":\r\n    {\r\n        \"firstName\":\"{{firstName}}\",\r\n        \"lastName\":\"{{lastName}}\",\r\n        \"prefix\":\"{{prefix}}\",\r\n        \"gender\":\"{{gender}}\",\r\n        \"dateOfBirth\": \"{{latestdob}}\",\r\n        \"citizenship\":\"RESIDENT\",\r\n        \"taxCategory\":\"\",\r\n        \"businessTitle\":\"\",\r\n        \"timeZone\":\"\",\r\n        \"emails\":\r\n        {\r\n            \"PERSONAL\":\r\n            {\r\n                \"type\":\"PERSONAL\",\r\n                \"address\":\"{{address}}\",\r\n                \"verified\":false\r\n                }\r\n                },\r\n                \"phones\":\r\n                {\r\n                    \"HOME\":\r\n                    {\r\n                        \"type\":\"HOME\",\r\n                        \"number\":\"{{phonenumber}}\"\r\n                        },\r\n                        \"MOBILE\":\r\n                        {\r\n                            \"type\":\"MOBILE\",\r\n                            \"number\":\"{{phonenumber}}\"\r\n                            }\r\n                            },\r\n                            \"addresses\":\r\n                            {\r\n                                \"MAILING\":{\r\n                                    \"address1\":\"{{address1}}\",\r\n                                    \"address2\":\"\",\r\n                                    \"address3\":\"\",\r\n                                    \"postalCode\":\"{{postalCode}}\",\r\n                                    \"city\":\"{{city}}\",\r\n                                    \"state\":\"MI\",\r\n                                    \"isoCountryCode\":\"US\"\r\n                                    },\r\n                                    \"BILLING\":\r\n                                    {\r\n                                        \"address1\":\"{{address1}}\",\r\n                                        \"address2\":\"\",\r\n                                        \"address3\":\"\",\r\n                                        \"postalCode\":\"{{postalCode}}\",\r\n                                        \"city\":\"{{city}}\",\r\n                                        \"state\":\"MI\",\r\n                                        \"isoCountryCode\":\"US\",\r\n                                        \"type\":\"BILLING\"\r\n                                        }},\r\n                                        \"passwordHints\":\r\n                                        [{\r\n                                            \"securityQuestion\":{\r\n                                                \"question\":\"securityQuestion.city\"\r\n                                                },\r\n                                                \"securityAnswer\":\r\n                                                {\r\n                                                    \"answer\":\"city\"\r\n                                                    }\r\n                                                    }\r\n                                                    ]\r\n                                                    },\r\n                                                    \"profileDTO\":{\r\n                                                        \"ageConfirmation\":true,\"affiliateId\":\"null\",\"trackingCampaign\":\"null\",\"receiveAlerts\":true,\"marketAnalysis\":true,\"acceptsEmail\":true,\"acceptsRewards\":true,\"language\":\"en_US\",\"preferredCurrency\":\"USD\",\r\n                                                            \"nickName\":\"{{nickName}}\",\"communicationPreferences\":null,\"preferredPaymentMode\":null,\"registrationDate\":null,\"registrationLevel\":2,\r\n                                                            \"userName\":\"{{userName}}\",\r\n                                                        \"loyaltyTier\":\"\",\"acceptedTermsAndConditionsDate\":1605712524898,\"acceptTermsAndConditions\":true,\"termsAndConditionsId\":\"1605712524898\"\r\n                                                        },\r\n                                                        \"nonpublicPersonalInfo\":{\r\n                                                            \"dateOfBirth\": \"06061990\",\"feinNumber\":\"\",\"identificationNumber\":\"{{ssn}}\",\"identificationIssuer\":\"ssn\",\"socialSecurityNumber\":\"{{ssn}}\",\"securityCode\":\"\"\r\n                                                            },\r\n                                                            \"promotions\":[{\r\n                                                                \"type\":\"INVITATION_CODE\"}],\r\n                                                                \"optIntoGeoCompliance\":false,\"password\":\"Password1\",\"playerCard\":null\r\n                                                                }"
+				},
+				"url": {
+					"raw": "https://sagsit1interactive.dev.igt.com/api/v2/players/registration",
+					"protocol": "https",
+					"host": [
+						"sagsit1interactive",
+						"dev",
+						"igt",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"players",
+						"registration"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "Anushaqatest10",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "anushasit1test10@mailinator.com",
+							"disabled": true
+						},
+						{
+							"key": "confirmemail",
+							"value": "anushasit1test10@mailinator.com",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "Password1",
+							"disabled": true
+						},
+						{
+							"key": "confirmpassword",
+							"value": "Password1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

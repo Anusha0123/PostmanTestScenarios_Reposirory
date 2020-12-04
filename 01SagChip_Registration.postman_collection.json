@@ -14,8 +14,8 @@
 						"id": "8d67da15-20ca-4969-8223-6d48cf5ce2ce",
 						"exec": [
 							" var jsonData = pm.response.json();\r",
-							" pm.test(\"The response time is less than 5000ms\", function () {\r",
-							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							" pm.test(\"The response time is less than 6000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(6000);\r",
 							"});\r",
 							"\r",
 							"pm.test(\"Status code is 200 success.\", function () {\r",
